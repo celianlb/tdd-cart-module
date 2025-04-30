@@ -1,21 +1,28 @@
-export type Product = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-};
+import { z } from "zod";
 
-export type Discount = {
-  name: string;
-  percentage: number;
-};
+export const Product = z.object({
+  id: z.string(),
+  name: z.string(),
+  price: z.number().positive(),
+  quantity: z.number().int().positive(),
+});
+
+export const Discount = z.object({
+  name: z.string(),
+  percentage: z.number().int().min(0).max(100),
+});
 
 export class Cart {
-  private cart: Product[];
-  private availableDiscounts: Discount[] = [];
+  private cart: z.infer<typeof Product>[];
+  private availableDiscounts: z.infer<typeof Discount>[] = [];
   private discountPercentage = 0;
 
-  constructor(initialValue: Product[] = [], discounts: Discount[] = []) {
+  constructor(
+    initialValue: z.infer<typeof Product>[] = [],
+    discounts: z.infer<typeof Discount>[] = [],
+  ) {
+    Product.array().parse(initialValue);
+    Discount.array().parse(discounts);
     this.cart = initialValue;
     this.availableDiscounts = discounts;
   }
@@ -24,7 +31,8 @@ export class Cart {
     return this.cart;
   }
 
-  addProduct(product: Product): void {
+  addProduct(product: z.infer<typeof Product>): void {
+    Product.parse(product);
     this.cart.push(product);
   }
 

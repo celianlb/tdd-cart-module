@@ -1,5 +1,6 @@
 import { Cart } from "src/cart";
 import { describe, expect, it } from "vitest";
+import { ZodError } from "zod";
 
 describe("cart module", () => {
   it("should add a product to the cart", () => {
@@ -42,6 +43,42 @@ describe("cart module", () => {
         price: 100,
       },
     ]);
+
+    try {
+      cart.addProduct({
+        id: "test01",
+        name: "Test Product",
+        price: -10,
+        quantity: 1,
+      });
+      throw new Error("This should not be reached");
+    } catch (e) {
+      expect(e).toBeInstanceOf(ZodError);
+    }
+
+    try {
+      cart.addProduct({
+        id: "test01",
+        name: "Test Product",
+        price: 10,
+        quantity: 0,
+      });
+      throw new Error("This should not be reached");
+    } catch (e) {
+      expect(e).toBeInstanceOf(ZodError);
+    }
+
+    try {
+      cart.addProduct({
+        id: "test01",
+        name: "Test Product",
+        price: 10,
+        quantity: -1,
+      });
+      throw new Error("This should not be reached");
+    } catch (e) {
+      expect(e).toBeInstanceOf(ZodError);
+    }
   });
 
   it("should remove a product from the cart", () => {
@@ -69,6 +106,7 @@ describe("cart module", () => {
 
     try {
       cart.removeProduct("doesnotexist");
+      throw new Error("This should not be reached");
     } catch (e) {
       expect(e).toBeInstanceOf(Error);
       // @ts-ignore
@@ -77,6 +115,7 @@ describe("cart module", () => {
 
     try {
       cart.removeProduct("1");
+      throw new Error("This should not be reached");
     } catch (e) {
       expect(e).toBeInstanceOf(Error);
       // @ts-ignore
@@ -129,6 +168,7 @@ describe("cart module", () => {
 
     try {
       cart.applyDiscount("nonexistent");
+      throw new Error("This should not be reached");
     } catch (e) {
       expect(e).toBeInstanceOf(Error);
       // @ts-ignore
@@ -137,6 +177,7 @@ describe("cart module", () => {
 
     try {
       cart.applyDiscount("10% off");
+      throw new Error("This should not be reached");
     } catch (e) {
       expect(e).toBeInstanceOf(Error);
       // @ts-ignore
