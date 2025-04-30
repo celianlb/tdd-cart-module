@@ -1,14 +1,15 @@
-
 {
   "name": "cart-tdd-template",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "format": "biome check --fix"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "typescript": "^5.2.2",
     "vitest": "^1.0.0",
-    "zod": "^3.22.2",
-    "typescript": "^5.2.2"
+    "zod": "^3.22.2"
   }
 }
